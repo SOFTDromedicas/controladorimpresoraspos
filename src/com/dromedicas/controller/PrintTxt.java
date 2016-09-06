@@ -23,14 +23,21 @@ import javax.print.event.PrintJobEvent;
 
 public class PrintTxt {
 
-  public static void main(String[] args) throws PrintException, IOException {
+	
+	/**
+	 * Recibe un archivo file de tipo txt para imprimir
+	 * @param file 
+	 * @throws PrintException
+	 * @throws IOException
+	 */
+  public static void printTxt(File file) throws PrintException, IOException {
     String defaultPrinter =
       PrintServiceLookup.lookupDefaultPrintService().getName();
     System.out.println("Default printer: " + defaultPrinter);
 
     PrintService service = PrintServiceLookup.lookupDefaultPrintService();
 
-    FileInputStream in = new FileInputStream(new File("C:/TestPrintfiles/factura.txt"));
+    FileInputStream in = new FileInputStream(file);
 
     PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
     pras.add(new Copies(1));
@@ -81,6 +88,7 @@ class PrintJobWatcher {
       }
     });
   }
+  
   public synchronized void waitForDone() {
     try {
       while (!done) {

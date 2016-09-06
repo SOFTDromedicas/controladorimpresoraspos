@@ -1,120 +1,84 @@
 package com.dromedicas.controller;
 
-
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.printing.PDFPageable;
 
 /**
 *
 * @author 
 */
 public class Main {
+	
+	private static String url;
+	private static String impresora ;
 
-	public static void main(String[] args) {
-		
-		Properties propiedades = new Properties();
-		FileInputStream entrada;
-		String url = "";
-		String impresora = "";
-		
+	public static void main(String[] args) {		
 		try {
-			entrada = 
-					new FileInputStream( "C:\\AppServ\\www\\dropos\\properties\\propiedades.dat" );
-			//cargo las propiedades
-			propiedades.load(entrada);
-			entrada.close();
-			Set< Object > claves = propiedades.keySet(); // obtiene los nombres de las propiedades
-			
-			// asigna los valores
-			for ( Object clave : claves )
-			 {
-				if(clave.equals("url"))
-					url = propiedades.getProperty( ( String ) clave ) ;
-				if(clave.equals("printer"))
-					impresora = propiedades.getProperty( ( String ) clave ) ;
-				
-			/*	
-			System.out.printf(
-			 "%s\t%s\n", clave, propiedades.getProperty( ( String ) clave ) );
-			*/
-			 } // fin de for	
-			
-			System.out.println("url: "+url);
-			System.out.println("impresora: "+impresora);
-			
+			for(String file: args){
+				preparedPrinter( file );
+			}			
 		} catch (Exception e) {
+			System.err.print("Falla al recibir los archivos");
 			e.printStackTrace();
 		}
-		
-		
-		
-		//imprimirPDF(args);
-		
 	}// fin del main
 	
 	
-	
-	
-	
-	
-	private static void imprimirPDF(String...s){
-		
-		String uri;
-		uri = "C:\\AppServ\\www\\dropos\\print\\";
+	private static String preparedPrinter( String document ){
 		try {
-			// validacion de multiples archivos
-			if (s.length > 1) {
-				for (String e : s) {
-					printFile(new File(uri + e + ".pdf"));
-				}
-			} else {
-				//printFile(new File( uri + "factura_3" + ".pdf"));
-				printFile(new File(uri + s[0]+".pdf"));
-			}
+			 cargaParametros();
+			 //Determino el tipo de archivo
+			 //Divide la cadena antes en el punto de la extension del archivo
+			 String cadenas[] = document.split("\\.(?=[^\\.]+$)");
+			 if(cadenas[1].equals("txt"))
+			 {	
+				 String uri = url + document;
+				 File file = new File(uri);
+				 PrintTxt.printTxt(file);			 
+				 				 
+			 }else{
+				 if(cadenas[1].equals("pdf")){
+					 String uri = url + document;
+					 File file = new File(uri);
+					 PrintPdf.printPdf(impresora, file); 
+				 }
+			 }
 		} catch (Exception e) {
-			System.out.println("Error:");
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-	private static void printFile(File f) {
-		try {	
-			PDDocument pdf = PDDocument.load(f);
-			PrinterJob job = PrinterJob.getPrinterJob();
-			PDFPageable pdfPg = new PDFPageable(pdf);
-			PrintService myPrintService = findPrintService("POS-80");
-			job.setPageable(pdfPg);
-			job.setPrintService( myPrintService  );
-			job.print();
-		} catch (Exception e) {
-			System.out.println("Error en printFile:");
-			e.printStackTrace();
-		}
+			// TODO: handle exception
+		}		
+		return "";		
 	}	
 	
 	
-	private static PrintService findPrintService(String printerName) {
-	    PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
-	    for (PrintService printService : printServices) {
-	        if (printService.getName().trim().equals(printerName)) {
-	            return printService;
-	        }
-	    }
-	    return null;
-	}
-			
-}
+	private static void cargaParametros(){
+		try {
+			// Obtengo los parametros de impresion y url de archivos
+			Properties propiedades = new Properties();
+			FileInputStream entrada;
 
+			String uriPropiedades = "C:\\AppServ\\www\\dropos\\properties\\propiedades.dat";
+			entrada = new FileInputStream(uriPropiedades);
+			// cargo las propiedades
+			propiedades.load(entrada);
+			// cierra el flujo de entrada
+			entrada.close();
+			// obtiene las claves de las propiedades
+			Set<Object> claves = propiedades.keySet();
+			// asigna los valores
+			for (Object clave : claves) {
+				if (clave.equals("url"))
+					url = propiedades.getProperty((String) clave);
+				if (clave.equals("printer"))
+					impresora = propiedades.getProperty((String) clave);
+			} // fin de for
+		} catch (Exception e) {
+			System.err.print("Falla en la carga de los parametros");
+			e.printStackTrace();
+		}
+	}
+	
+}
 
 
