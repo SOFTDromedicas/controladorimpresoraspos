@@ -1,6 +1,6 @@
 # Controlador para impresoras POS
 
-Aplicacion Java para imprimir documentos .pdf y .txt para impresoras POS. Principalmente desarrollada para [Dromedicas del Oriente](http://www.dromedicas.com.co/).
+Aplicacion Java para imprimir documentos .pdf y .txt en impresoras POS. Principalmente desarrollada para [Dromedicas del Oriente](http://www.dromedicas.com.co/).
 Fue desarrollada para imprimir documentos documentos desde **PHP** sin vista previa; principalmente desde la solucion DROPOS.
 
 ### Implementación
