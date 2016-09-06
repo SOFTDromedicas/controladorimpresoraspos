@@ -13,11 +13,9 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
-
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
-
 import javax.print.event.PrintJobAdapter;
 import javax.print.event.PrintJobEvent;
 
@@ -30,37 +28,61 @@ public class PrintTxt {
 	 * @throws PrintException
 	 * @throws IOException
 	 */
-  public static void printTxt(File file) throws PrintException, IOException {
-    String defaultPrinter =
-      PrintServiceLookup.lookupDefaultPrintService().getName();
-    //System.out.println("Default printer: " + defaultPrinter);
+  public static void printTxt( String printer, File file) throws PrintException, IOException {
+    
+		try {
+			/*
+			String defaultPrinter = PrintServiceLookup
+					.lookupDefaultPrintService().getName();
 
-    PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+			System.out.println("Default printer: " + defaultPrinter);
+			*/
+			// PrintService service =
+			// PrintServiceLookup.lookupDefaultPrintService();
 
-    FileInputStream in = new FileInputStream(file);
+			PrintService service = findPrintService(printer);
 
-    PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
-    pras.add(new Copies(1));
+			FileInputStream in = new FileInputStream(file);
 
+			PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+			pras.add(new Copies(1));
 
-    DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-    Doc doc = new SimpleDoc(in, flavor, null);
+			DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+			Doc doc = new SimpleDoc(in, flavor, null);
 
-    DocPrintJob job = service.createPrintJob();
-    PrintJobWatcher pjw = new PrintJobWatcher(job);
-    job.print(doc, pras);
-    pjw.waitForDone();
-    in.close();
+			DocPrintJob job = service.createPrintJob();
+			PrintJobWatcher pjw = new PrintJobWatcher(job);
+			job.print(doc, pras);
+			pjw.waitForDone();
+			in.close();
 
-    // send FF to eject the page
-    InputStream ff = new ByteArrayInputStream("\f".getBytes());
-    Doc docff = new SimpleDoc(ff, flavor, null);
-    DocPrintJob jobff = service.createPrintJob();
-    pjw = new PrintJobWatcher(jobff);
-    jobff.print(docff, null);
-    pjw.waitForDone();
+			// send FF to eject the page
+			InputStream ff = new ByteArrayInputStream("\f".getBytes());
+			Doc docff = new SimpleDoc(ff, flavor, null);
+			DocPrintJob jobff = service.createPrintJob();
+			pjw = new PrintJobWatcher(jobff);
+			jobff.print(docff, null);
+			pjw.waitForDone();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	  
   }
+  
+  private static PrintService findPrintService(String printerName) {
+	    PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+	    //String defaultPrinter = PrintServiceLookup.lookupDefaultPrintService().getName();
+	    	for (PrintService printService : printServices) {
+	    	if (printService.getName().trim().equals(printerName)) {	        
+	            return printService;
+	        }
+	    }
+	    return null;
+	}
 }
+
+
 
 class PrintJobWatcher {
   boolean done = false;
@@ -82,7 +104,7 @@ class PrintJobWatcher {
       void allDone() {
         synchronized (PrintJobWatcher.this) {
           done = true;
-          //System.out.println("Printing done ...");
+          System.out.println("Printing done ...");
           PrintJobWatcher.this.notify();
         }
       }

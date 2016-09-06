@@ -36,7 +36,7 @@ public class PrintPdf {
 			PDDocument pdf = PDDocument.load(f);
 			PrinterJob job = PrinterJob.getPrinterJob();
 			PDFPageable pdfPg = new PDFPageable(pdf);
-			PrintService myPrintService = findPrintService(device);
+			PrintService myPrintService = findPrintService(device);			
 			job.setPageable(pdfPg);
 			job.setPrintService( myPrintService  );
 			job.print();
@@ -44,15 +44,13 @@ public class PrintPdf {
 			System.out.println("Error al imprimir los achivos:");
 			e.printStackTrace();
 		}
-	}	
-	
+	}		
 	
 	private static PrintService findPrintService(String printerName) {
 	    PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
-	    String defaultPrinter =
-	    	      PrintServiceLookup.lookupDefaultPrintService().getName();
-	    for (PrintService printService : printServices) {
-	    	if (printService.getName().trim().equals(defaultPrinter)) {	        
+	    //String defaultPrinter = PrintServiceLookup.lookupDefaultPrintService().getName();
+	    	for (PrintService printService : printServices) {
+	    	if (printService.getName().trim().equals(printerName)) {	        
 	            return printService;
 	        }
 	    }

@@ -36,7 +36,7 @@ public class Main {
 			 {	
 				 String uri = url + document;
 				 File file = new File(uri);
-				 PrintTxt.printTxt(file);			 
+				 PrintTxt.printTxt(impresora, file);			 
 				 				 
 			 }else{
 				 if(cadenas[1].equals("pdf")){
