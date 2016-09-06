@@ -33,7 +33,7 @@ public class PrintTxt {
   public static void printTxt(File file) throws PrintException, IOException {
     String defaultPrinter =
       PrintServiceLookup.lookupDefaultPrintService().getName();
-    System.out.println("Default printer: " + defaultPrinter);
+    //System.out.println("Default printer: " + defaultPrinter);
 
     PrintService service = PrintServiceLookup.lookupDefaultPrintService();
 
@@ -82,7 +82,7 @@ class PrintJobWatcher {
       void allDone() {
         synchronized (PrintJobWatcher.this) {
           done = true;
-          System.out.println("Printing done ...");
+          //System.out.println("Printing done ...");
           PrintJobWatcher.this.notify();
         }
       }

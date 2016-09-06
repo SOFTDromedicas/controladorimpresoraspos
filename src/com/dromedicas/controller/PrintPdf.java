@@ -41,7 +41,7 @@ public class PrintPdf {
 			job.setPrintService( myPrintService  );
 			job.print();
 		} catch (Exception e) {
-			System.out.println("Error en printFile:");
+			System.out.println("Error al imprimir los achivos:");
 			e.printStackTrace();
 		}
 	}	
@@ -49,8 +49,10 @@ public class PrintPdf {
 	
 	private static PrintService findPrintService(String printerName) {
 	    PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+	    String defaultPrinter =
+	    	      PrintServiceLookup.lookupDefaultPrintService().getName();
 	    for (PrintService printService : printServices) {
-	        if (printService.getName().trim().equals(printerName)) {
+	    	if (printService.getName().trim().equals(defaultPrinter)) {	        
 	            return printService;
 	        }
 	    }
