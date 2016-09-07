@@ -1,11 +1,11 @@
 # Controlador para impresoras POS
 
-Aplicacion Java para imprimir documentos .pdf y .txt en impresoras POS. Principalmente desarrollada para [Dromedicas del Oriente](http://www.dromedicas.com.co/).
-Fue desarrollada para imprimir documentos documentos desde **PHP** sin vista previa; principalmente desde la solucion DROPOS.
+Aplicacion Java para imprimir documentos .pdf y .txt. Desarrollada por [Dromedicas del Oriente](http://www.dromedicas.com.co/).
+Su principal funcion es imprimir documentos desde **PHP** sin vista previa.
 
 ### Implementación
 
-Para ser usada es requerida algunas librerias adicionales como [Apache PDFBox](https://pdfbox.apache.org/).
+Desarrollada con base en [Apache PDFBox](https://pdfbox.apache.org/).
 Para su uso implemente la variable de entorno **Java** en su entorno **PHP** asi:
 
 _Implementacion Variable Java en app **PHP**_
